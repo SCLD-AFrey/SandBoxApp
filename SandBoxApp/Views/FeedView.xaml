@@ -1,0 +1,64 @@
+﻿<UserControl xmlns:dxm="http://schemas.devexpress.com/winfx/2008/xaml/map"  xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"  xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"  x:Class="SandBoxApp.Views.FeedView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SandBoxApp.Views"
+             xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm" 
+             xmlns:ViewModels="clr-namespace:SandBoxApp.ViewModels"
+             DataContext="{dxmvvm:ViewModelSource Type=ViewModels:FeedViewModel}">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="22"></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <TextBlock Text="{Binding SelectedDisplayName}" />
+        <dx:SimpleButton Grid.Column="1" Grid.Row="0" Command="{Binding RefreshData}"/>
+        <dxg:GridControl 
+            Grid.Column="0" Grid.Row="1"
+            ShowLoadingPanel="{Binding ShowLoading}"
+            ItemsSource="{DXBinding 'AllAreas', Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+            SelectedItem="{DXBinding 'SelectedArea', Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+            <dxg:GridControl.Columns>
+                <dxg:GridColumn FieldName="displayName" />
+                <dxg:GridColumn FieldName="totalConfirmed" />
+                <dxg:GridColumn FieldName="totalDeaths" />
+                <dxg:GridColumn FieldName="totalRecovered" />
+                <dxg:GridColumn FieldName="totalActive" />
+            </dxg:GridControl.Columns>
+            <dxg:GridControl.View>
+                <dxg:TableView ShowGroupPanel="False" />
+            </dxg:GridControl.View>
+
+        </dxg:GridControl>
+        <dxg:GridControl 
+            Grid.Column="1" Grid.Row="1"
+            ItemsSource="{DXBinding 'SelectedArea.areas', Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            SelectedItem="{DXBinding 'SelectedSubArea', Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+            <dxg:GridControl.Columns>
+                <dxg:GridColumn FieldName="displayName" />
+                <dxg:GridColumn FieldName="totalConfirmed" />
+                <dxg:GridColumn FieldName="totalDeaths" />
+                <dxg:GridColumn FieldName="totalRecovered" />
+                <dxg:GridColumn FieldName="totalActive" />
+            </dxg:GridControl.Columns>
+            <dxg:GridControl.View>
+                <dxg:TableView ShowGroupPanel="False" AllowCountTotalSummary="True" />
+            </dxg:GridControl.View>
+
+        </dxg:GridControl>
+        <dxm:MapControl Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" CenterPoint="{Binding CenterPoint}" ZoomLevel="{Binding ZoomLevel}">
+            <dxm:MapControl.MapEditor>
+                <dxm:MapEditor/>
+            </dxm:MapControl.MapEditor>
+            <dxm:ImageLayer  >
+                <dxm:BingMapDataProvider BingKey="ApCTqHWN3wPme6CGGZR30fjeTakMqKquChmA89NJjgXHhOHV1JXMw3nfpOy3GMSn" Kind="Hybrid"/>
+            </dxm:ImageLayer>
+        </dxm:MapControl>
+    </Grid>
+</UserControl>

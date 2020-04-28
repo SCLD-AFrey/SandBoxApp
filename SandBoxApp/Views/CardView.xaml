@@ -1,0 +1,70 @@
+﻿<UserControl
+    x:Class="SandBoxApp.Views.CardView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:dx="http://schemas.devexpress.com/winfx/2008/xaml/core"
+    xmlns:dxg="http://schemas.devexpress.com/winfx/2008/xaml/grid"
+    xmlns:dxmvvm="http://schemas.devexpress.com/winfx/2008/xaml/mvvm"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ViewModels="clr-namespace:SandBoxApp.ViewModels"
+    DataContext="{dxmvvm:ViewModelSource Type=ViewModels:CardViewModel}">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="3*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="22" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <dx:SimpleButton
+            Grid.Row="0"
+            Grid.Column="0"
+            Command="{Binding UpdateButtonCommand}"
+            Content="Save" />
+        <dxg:GridControl
+            Grid.Row="1"
+            Grid.Column="0"
+            AutoGenerateColumns="None"
+            ItemsSource="{DXBinding 'AvailablePersonCollection', Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+            SelectedItem="{DXBinding 'SelectedPerson', Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            SelectionMode="Row">
+            <dxg:GridControl.View>
+                <dxg:TableView
+                    AllowDragDrop="True"
+                    AllowDrop="False"
+                    AllowPaging="True"
+                    NavigationStyle="Row"
+                    PageSize="20"
+                    ShowGroupPanel="False">
+                    <dxmvvm:Interaction.Behaviors>
+                        <dxmvvm:EventToCommand
+                            Command="{DXBinding 'CompleteRecordDragDropCommand'}"
+                            EventName="CompleteRecordDragDrop"
+                            PassEventArgsToCommand="True" />
+                    </dxmvvm:Interaction.Behaviors>
+                </dxg:TableView>
+            </dxg:GridControl.View>
+            <dxg:GridColumn FieldName="FirstName" />
+            <dxg:GridColumn FieldName="LastName" />
+        </dxg:GridControl>
+        <dxg:GridControl
+            Grid.Row="1"
+            Grid.Column="1"
+            AutoGenerateColumns="None"
+            ItemsSource="{DXBinding 'SelectedPersonCollection', Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+            <dxg:GridControl.View>
+                <dxg:CardView AllowDrop="True" CardLayout="Rows" />
+            </dxg:GridControl.View>
+            <dxg:GridColumn FieldName="PersonType" />
+            <dxg:GridColumn FieldName="Title" />
+            <dxg:GridColumn FieldName="FirstName" />
+            <dxg:GridColumn FieldName="MiddleName" />
+            <dxg:GridColumn FieldName="LastName" />
+            <dxg:GridColumn FieldName="ModifiedDate" />
+        </dxg:GridControl>
+    </Grid>
+
+</UserControl>
